@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<form method="get" class="form-inline mt-2">
+    <input class="form-control" type="text" id="search_field" placeholder="Nome da cidade">
+    <input class="btn btn-primary ml-2" id="button" value="Buscar">
+</form>
+
+<table class="table mt-1">
+  <thead>
+    <tr>
+      <th>Cidade</th>
+      <th>Estado</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for city in object_list %}
+    <tr>
+      <td>{{ city.name }}</td>
+      <td>{{ city.state }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<div align="center">
+    <ul class="pagination" style="justify-content: center; display: flex;">
+        {% for i in page_obj.paginator.page_range %}
+        {% if page_obj.number == i %}
+        <li class="page-item active"><a class="page-link" href="#"><span>{{ i }} <span class="sr-only">(current)</span></span></a></li>
+        {% elif i > page_obj.number|add:'-5' and i < page_obj.number|add:'5' %}
+        <li class="page-item"><a class="page-link" href="?{% if search %}search_field={{search}}&{%endif%}page={{ i }}">{{ i }}</a></li>
+        {% endif %}
+        {% endfor %}
+    </ul>
+</div>
+<script>
+const button = document.querySelector('#button');
+button.onclick=function() {
+    search = document.querySelector('#search_field')
+    location.href = '/cities?search_field='+ search.value
+}
+</script>
+{% endblock %}
